@@ -36,7 +36,10 @@ export function FilterPanel({
     setExpandedSections(newExpanded);
   };
 
-  const updateFilter = (key: keyof SearchFilters, value: any) => {
+  const updateFilter = <K extends keyof SearchFilters>(
+    key: K,
+    value: SearchFilters[K]
+  ) => {
     onFiltersChange({
       ...filters,
       [key]: value,

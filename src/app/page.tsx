@@ -38,14 +38,6 @@ export default function Home() {
     return searchEngine.getSuggestions(searchQuery);
   }, [searchEngine, searchQuery]);
 
-  // Get filter options
-  const availableCategories = useMemo(
-    () => categories.map((cat) => cat.name),
-    [categories]
-  );
-  const formats = useMemo(() => searchEngine.getFormats(), [searchEngine]);
-  const tags = useMemo(() => searchEngine.getTags(), [searchEngine]);
-
   const handleIconClick = useCallback((icon: Icon) => {
     setSelectedIcon(icon);
     setIsModalOpen(true);
