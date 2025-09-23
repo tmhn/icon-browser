@@ -18,7 +18,7 @@ export function SearchBar({
   onChange,
   suggestions,
   onSuggestionClick,
-  placeholder = "Search icons by name, category, or synonym...",
+  placeholder = "Search icons by name or category",
   className,
 }: SearchBarProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -64,8 +64,8 @@ export function SearchBar({
   return (
     <div className={cn("relative w-full", className)}>
       <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <MagnifyingGlassIcon className="h-4 w-4 text-gray-400" />
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
         </div>
         <input
           ref={inputRef}
@@ -79,12 +79,12 @@ export function SearchBar({
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           className={cn(
-            "block w-full pl-9 pr-9 py-2 border border-gray-300 rounded-lg",
-            "bg-white text-gray-900 placeholder-gray-500 text-sm",
-            "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+            "block w-full pl-12 pr-12 py-4 border border-gray-200 rounded-2xl",
+            "bg-white text-gray-900 placeholder-gray-500 text-base font-medium",
+            "focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent",
             "transition-all duration-200 ease-in-out",
             "shadow-sm hover:shadow-md focus:shadow-lg",
-            isFocused && "ring-2 ring-blue-500 border-transparent"
+            isFocused && "ring-2 ring-gray-400 border-transparent"
           )}
         />
         {value && (
@@ -92,7 +92,7 @@ export function SearchBar({
             onClick={clearSearch}
             className="absolute inset-y-0 right-0 pr-3 flex items-center"
           >
-            <XMarkIcon className="h-4 w-4 text-gray-400 hover:text-gray-600 transition-colors" />
+            <XMarkIcon className="h-5 w-5 text-gray-500 hover:text-gray-700 transition-colors" />
           </button>
         )}
       </div>
@@ -101,14 +101,14 @@ export function SearchBar({
       {showSuggestions && suggestions.length > 0 && (
         <div
           ref={suggestionsRef}
-          className="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto"
+          className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded-2xl shadow-xl max-h-60 overflow-y-auto"
         >
           <div className="py-1">
             {suggestions.map((suggestion, index) => (
               <button
                 key={index}
                 onClick={() => handleSuggestionClick(suggestion)}
-                className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors"
+                className="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors"
               >
                 <div className="flex items-center">
                   <MagnifyingGlassIcon className="h-4 w-4 text-gray-400 mr-2" />

@@ -14,14 +14,23 @@ interface IconPreviewModalProps {
   icon: Icon | null;
   isOpen: boolean;
   onClose: () => void;
+  iconStyle: "line" | "solid";
+  onIconStyleChange: (style: "line" | "solid") => void;
 }
 
 export function IconPreviewModal({
   icon,
   isOpen,
   onClose,
+  iconStyle,
+  onIconStyleChange,
 }: IconPreviewModalProps) {
   const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const getIconPath = (icon: Icon) => {
+    // Replace the directory path to switch between line and solid
+    return icon.filePath.replace("/line/", `/${iconStyle}/`);
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -87,7 +96,7 @@ export function IconPreviewModal({
         />
 
         {/* Modal */}
-        <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+        <div className="relative bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <div>
@@ -96,7 +105,7 @@ export function IconPreviewModal({
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-3 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors"
             >
               <XMarkIcon className="h-6 w-6" />
             </button>
@@ -110,7 +119,7 @@ export function IconPreviewModal({
                 <div className="aspect-square bg-gray-50 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300">
                   <div className="w-24 h-24 flex items-center justify-center">
                     <img
-                      src={icon.filePath}
+                      src={getIconPath(icon)}
                       alt={icon.name}
                       className="w-20 h-20 object-contain"
                       onError={(e) => {
@@ -133,8 +142,8 @@ export function IconPreviewModal({
                   </div>
                 </div>
 
-                {/* Format Badge */}
-                <div className="flex items-center justify-center">
+                {/* Format Badge and Style Toggle */}
+                <div className="flex items-center justify-center space-x-4">
                   <span
                     className={cn(
                       "inline-flex items-center px-4 py-2 rounded-full text-sm font-medium border",
@@ -143,6 +152,30 @@ export function IconPreviewModal({
                   >
                     {icon.format.toUpperCase()} Format
                   </span>
+
+                  {/* Icon Style Toggle */}
+                  <div className="flex items-center bg-gray-100 rounded-xl p-1">
+                    <button
+                      onClick={() => onIconStyleChange("line")}
+                      className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                        iconStyle === "line"
+                          ? "bg-white text-gray-900 shadow-sm"
+                          : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      Line
+                    </button>
+                    <button
+                      onClick={() => onIconStyleChange("solid")}
+                      className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                        iconStyle === "solid"
+                          ? "bg-white text-gray-900 shadow-sm"
+                          : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      Solid
+                    </button>
+                  </div>
                 </div>
 
                 {/* Actions */}
