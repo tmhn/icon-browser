@@ -19,8 +19,10 @@ const fuseOptions = {
 
 export class IconSearch {
   private fuse: Fuse<Icon>;
+  private icons: Icon[];
 
   constructor(icons: Icon[]) {
+    this.icons = icons;
     this.fuse = new Fuse(icons, fuseOptions);
   }
 
@@ -35,17 +37,16 @@ export class IconSearch {
       .map(result => ({
         icon: result.item,
         score: result.score || 0,
-        matchedFields: result.matches?.map(match => match.key) || []
+        matchedFields: result.matches?.map(match => match.key).filter((key): key is string => key !== undefined) || []
       }))
       .filter(result => this.matchesFilters(result.icon, filters))
       .sort((a, b) => a.score - b.score); // Lower score = better match
   }
 
   private getAllIcons(filters: SearchFilters): SearchResult[] {
-    return this.fuse.getIndex()
-      .docs
-      .filter(icon => this.matchesFilters(icon, filters))
-      .map(icon => ({
+    return this.icons
+      .filter((icon: Icon) => this.matchesFilters(icon, filters))
+      .map((icon: Icon) => ({
         icon,
         score: 0,
         matchedFields: []
@@ -96,7 +97,7 @@ export class IconSearch {
 
   getCategories(): string[] {
     const categories = new Set<string>();
-    this.fuse.getIndex().docs.forEach(icon => {
+    this.icons.forEach((icon: Icon) => {
       categories.add(icon.category);
     });
     return Array.from(categories).sort();
@@ -104,7 +105,7 @@ export class IconSearch {
 
   getFormats(): string[] {
     const formats = new Set<string>();
-    this.fuse.getIndex().docs.forEach(icon => {
+    this.icons.forEach((icon: Icon) => {
       formats.add(icon.format);
     });
     return Array.from(formats).sort();
@@ -112,9 +113,9 @@ export class IconSearch {
 
   getTags(): string[] {
     const tags = new Set<string>();
-    this.fuse.getIndex().docs.forEach(icon => {
-      icon.tags.forEach(tag => tags.add(tag));
-      icon.synonyms.forEach(synonym => tags.add(synonym));
+    this.icons.forEach((icon: Icon) => {
+      icon.tags.forEach((tag: string) => tags.add(tag));
+      icon.synonyms.forEach((synonym: string) => tags.add(synonym));
     });
     return Array.from(tags).sort();
   }
