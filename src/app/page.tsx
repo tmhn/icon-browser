@@ -128,17 +128,30 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <p className="text-sm text-gray-500">
-              Made by{" "}
-              <a
-                href="https://tmhn.io"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-900"
-              >
-                Tom
-              </a>
-            </p>
+            <div className="flex flex-row gap-2">
+              <p className="text-sm text-gray-500">
+                Icons by{" "}
+                <a
+                  href="https://www.zachroszczewski.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-500 hover:text-gray-900"
+                >
+                  Zach.
+                </a>
+              </p>
+              <p className="text-sm text-gray-500">
+                App by{" "}
+                <a
+                  href="https://tmhn.io"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-500 hover:text-gray-900"
+                >
+                  Tom.
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </header>
@@ -284,6 +297,7 @@ export default function Home() {
           onIconClick={handleIconClick}
           iconStyle={iconStyle}
           onIconStyleChange={handleIconStyleChange}
+          hasSearchQuery={!!searchQuery.trim()}
         />
 
         {/* Load More Button */}

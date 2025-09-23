@@ -26,6 +26,7 @@ export function IconPreviewModal({
   onIconStyleChange,
 }: IconPreviewModalProps) {
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const getIconPath = (icon: Icon) => {
     // Replace the directory path to switch between line and solid
@@ -35,8 +36,14 @@ export function IconPreviewModal({
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      setIsAnimating(true);
     } else {
       document.body.style.overflow = "unset";
+      // Delay the close to allow animation to complete
+      const timer = setTimeout(() => {
+        setIsAnimating(false);
+      }, 200);
+      return () => clearTimeout(timer);
     }
 
     return () => {
@@ -91,12 +98,20 @@ export function IconPreviewModal({
       <div className="flex min-h-full items-center justify-center p-4">
         {/* Backdrop */}
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+          className={`fixed inset-0 bg-black/50 transition-opacity duration-200 ${
+            isAnimating ? "opacity-100" : "opacity-0"
+          }`}
           onClick={onClose}
         />
 
         {/* Modal */}
-        <div className="relative bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
+        <div
+          className={`relative bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden transition-all duration-200 transform ${
+            isAnimating
+              ? "opacity-100 scale-100 translate-y-0"
+              : "opacity-0 scale-95 translate-y-4"
+          }`}
+        >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <div>

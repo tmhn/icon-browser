@@ -7,7 +7,6 @@ import {
   EyeIcon,
   ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline";
-import { cn } from "@/lib/utils";
 import { Icon, SearchResult } from "@/types/icon";
 
 interface IconCardProps {
@@ -15,6 +14,7 @@ interface IconCardProps {
   iconStyle: "line" | "solid";
   onIconClick: (icon: Icon) => void;
   onIconStyleChange: (style: "line" | "solid") => void;
+  hasSearchQuery: boolean;
 }
 
 export const IconCard = memo(function IconCard({
@@ -22,6 +22,7 @@ export const IconCard = memo(function IconCard({
   iconStyle,
   onIconClick,
   onIconStyleChange,
+  hasSearchQuery,
 }: IconCardProps) {
   const { icon, score, matchedFields } = result;
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -44,11 +45,11 @@ export const IconCard = memo(function IconCard({
   return (
     <div className="flex flex-col text-center">
       <div
-        className="group relative bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-xl hover:border-gray-300 transition-all duration-300 cursor-pointer"
+        className="group relative bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-xl hover:border-gray-300 transition-all duration-300 cursor-pointer aspect-square"
         onClick={() => onIconClick(icon)}
       >
         {/* Icon Preview */}
-        <div className="aspect-square flex items-center justify-center mb-4 rounded-2xl group-hover:bg-gray-50 transition-colors">
+        <div className="aspect-square flex items-center justify-center rounded-2xl group-hover:bg-gray-50 transition-colors">
           <div className="w-12 h-12 flex items-center justify-center">
             <img
               src={getIconPath(icon)}
@@ -72,9 +73,9 @@ export const IconCard = memo(function IconCard({
         {/* Icon Info */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            {score > 0 && (
+            {hasSearchQuery && score !== undefined && (
               <span className="text-xs text-blue-600 font-medium">
-                {Math.round(score * 100)}% match
+                {Math.round((1 - score) * 100)}% match
               </span>
             )}
           </div>

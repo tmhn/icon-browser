@@ -10,6 +10,7 @@ interface IconGridClientProps {
   iconStyle: "line" | "solid";
   onIconClick: (icon: Icon) => void;
   onIconStyleChange: (style: "line" | "solid") => void;
+  hasSearchQuery: boolean;
   className?: string;
 }
 
@@ -18,6 +19,7 @@ export const IconGridClient = memo(function IconGridClient({
   iconStyle,
   onIconClick,
   onIconStyleChange,
+  hasSearchQuery,
   className,
 }: IconGridClientProps) {
   const [isClient, setIsClient] = useState(false);
@@ -65,9 +67,9 @@ export const IconGridClient = memo(function IconGridClient({
               {/* Icon Info */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  {result.score > 0 && (
+                  {hasSearchQuery && result.score !== undefined && (
                     <span className="text-xs text-blue-600 font-medium">
-                      {Math.round(result.score * 100)}% match
+                      {Math.round((1 - result.score) * 100)}% match
                     </span>
                   )}
                 </div>
@@ -110,6 +112,7 @@ export const IconGridClient = memo(function IconGridClient({
           iconStyle={iconStyle}
           onIconClick={onIconClick}
           onIconStyleChange={onIconStyleChange}
+          hasSearchQuery={hasSearchQuery}
         />
       ))}
     </div>
