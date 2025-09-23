@@ -100,8 +100,8 @@ export default function Home() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
+          <div className="flex items-center justify-between sm:h-16">
+            <div className="flex items-center flex-col sm:flex-row py-4 sm:py-0">
               <div className="flex-shrink-0 flex flex-row items-center">
                 <Image
                   src="/logo.png"
@@ -109,7 +109,7 @@ export default function Home() {
                   width={28}
                   height={28}
                 />
-                <h1 className="ml-4 text-2xl font-bold text-gray-900">
+                <h1 className="ml-4 text-lg sm:text-2xl font-bold text-gray-900">
                   Icon Browser
                 </h1>
               </div>
@@ -120,7 +120,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-2">
               <p className="text-sm text-gray-500">
                 Icons by{" "}
                 <a
@@ -148,34 +148,37 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-8">
         {/* Top Bar with Search and Filters */}
-        <div className="flex items-center justify-between gap-6 mb-8">
-          <div className="flex items-center gap-4 flex-1">
-            {/* Category Filter Dropdown */}
-            <div className="relative">
-              <select
-                value={filters.category || ""}
-                onChange={(e) => {
-                  const category = e.target.value;
-                  setFilters(category ? { category } : {});
-                }}
-                className="appearance-none bg-white border border-gray-200 rounded-2xl px-4 py-3 pr-10 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent min-w-[160px] shadow-sm hover:shadow-md transition-shadow"
-              >
-                <option value="">All Categories</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.name}>
-                    {category.name} ({category.count})
-                  </option>
-                ))}
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <ChevronDownIcon className="h-4 w-4 text-gray-500" />
+        <div className="space-y-4 mb-8">
+          {/* Mobile: Stack vertically, Desktop: Horizontal */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            {/* Filters Row */}
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Category Filter Dropdown */}
+              <div className="relative flex-shrink-0">
+                <select
+                  value={filters.category || ""}
+                  onChange={(e) => {
+                    const category = e.target.value;
+                    setFilters(category ? { category } : {});
+                  }}
+                  className="appearance-none bg-white border border-gray-200 rounded-2xl px-3 py-2 pr-8 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent w-full min-w-[140px] max-w-[200px] shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <option value="">All Categories</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name} ({category.count})
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                  <ChevronDownIcon className="h-4 w-4 text-gray-500" />
+                </div>
               </div>
-            </div>
 
-            {/* Format Filter */}
-            {/* <div className="relative">
+              {/* Format Filter */}
+              {/* <div className="relative">
               <select
                 value={filters.format || ""}
                 onChange={(e) => {
@@ -200,50 +203,51 @@ export default function Home() {
               </div>
             </div> */}
 
-            {/* Icon Style Toggle */}
-            <div className="flex items-center bg-gray-100 rounded-2xl p-1">
-              <button
-                onClick={() => setIconStyle("line")}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                  iconStyle === "line"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                Line
-              </button>
-              <button
-                onClick={() => setIconStyle("solid")}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
-                  iconStyle === "solid"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                Solid
-              </button>
+              {/* Icon Style Toggle */}
+              <div className="flex items-center bg-gray-100 rounded-2xl p-1 flex-shrink-0">
+                <button
+                  onClick={() => setIconStyle("line")}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
+                    iconStyle === "line"
+                      ? "bg-white text-gray-900 shadow-sm"
+                      : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  Line
+                </button>
+                <button
+                  onClick={() => setIconStyle("solid")}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
+                    iconStyle === "solid"
+                      ? "bg-white text-gray-900 shadow-sm"
+                      : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  Solid
+                </button>
+              </div>
+
+              {/* Clear Filters Button */}
+              {Object.keys(filters).length > 0 && (
+                <button
+                  onClick={() => setFilters({})}
+                  className="text-xs text-gray-600 hover:text-gray-900 flex items-center gap-1 px-2 py-1.5 rounded-xl hover:bg-gray-50 transition-colors font-medium flex-shrink-0"
+                >
+                  <XMarkIcon className="h-3 w-3" />
+                  Clear
+                </button>
+              )}
             </div>
 
-            {/* Clear Filters Button */}
-            {Object.keys(filters).length > 0 && (
-              <button
-                onClick={() => setFilters({})}
-                className="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors font-medium"
-              >
-                <XMarkIcon className="h-4 w-4" />
-                Clear filters
-              </button>
-            )}
-          </div>
-
-          {/* Search Bar */}
-          <div className="w-96">
-            <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-              suggestions={suggestions}
-              onSuggestionClick={handleSuggestionClick}
-            />
+            {/* Search Bar */}
+            <div className="w-full lg:w-96 flex-shrink-0">
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                suggestions={suggestions}
+                onSuggestionClick={handleSuggestionClick}
+              />
+            </div>
           </div>
         </div>
 
@@ -264,7 +268,7 @@ export default function Home() {
             <h3 className="text-xl font-semibold text-gray-900 mb-6">
               Browse by Category
             </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-3">
               {categories.map((category) => (
                 <button
                   key={category.id}

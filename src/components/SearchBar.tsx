@@ -64,8 +64,8 @@ export function SearchBar({
   return (
     <div className={cn("relative w-full", className)}>
       <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
+        <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+          <MagnifyingGlassIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
         </div>
         <input
           ref={inputRef}
@@ -79,8 +79,8 @@ export function SearchBar({
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           className={cn(
-            "block w-full pl-12 pr-12 py-4 border border-gray-200 rounded-2xl",
-            "bg-white text-gray-900 placeholder-gray-500 text-base font-medium",
+            "block w-full pl-10 pr-10 py-3 sm:py-4 border border-gray-200 rounded-2xl",
+            "bg-white text-gray-900 placeholder-gray-500 text-sm sm:text-base font-medium",
             "focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent",
             "transition-all duration-200 ease-in-out",
             "shadow-sm hover:shadow-md focus:shadow-lg",
@@ -90,9 +90,9 @@ export function SearchBar({
         {value && (
           <button
             onClick={clearSearch}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center"
+            className="absolute inset-y-0 right-0 pr-2 sm:pr-3 flex items-center"
           >
-            <XMarkIcon className="h-5 w-5 text-gray-500 hover:text-gray-700 transition-colors" />
+            <XMarkIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500 hover:text-gray-700 transition-colors" />
           </button>
         )}
       </div>
