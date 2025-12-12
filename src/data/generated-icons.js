@@ -3,6 +3,28 @@
 // Total icons: 1200
 // Categories: 21
 
+import { USER_INTERFACE } from "@/constants/categories";
+import OFFICE from "@/constants/categories";
+import CONTENT from "@/constants/categories";
+import TECH from "@/constants/categories";
+import PROFILE from "@/constants/categories";
+import AUDIO_VIDEO from "@/constants/categories";
+import SHOPPING from "@/constants/categories";
+import OBJECTS from "@/constants/categories";
+import NATURE from "@/constants/categories";
+import IMAGE from "@/constants/categories";
+import DESIGN_DEVELOPMENT from "@/constants/categories";
+import TRAVEL from "@/constants/categories";
+import HOMEGOODS from "@/constants/categories";
+import FOOD_DRINK from "@/constants/categories";
+import BUILDINGS_PLACES from "@/constants/categories";
+import REWARDS from "@/constants/categories";
+import ACTIVITIES from "@/constants/categories";
+import HEALTH_SCIENCE from "@/constants/categories";
+import BUSINESS from "@/constants/categories";
+import ARROWS from "@/constants/categories";
+import SYMBOLS from "@/constants/categories";
+
 export const generatedIcons = [
   {
     "id": "-1",
@@ -4383,7 +4405,7 @@ export const generatedIcons = [
     "categoryId": "symbols",
     "filePath": "/icons/line/Eiffel-Tower.svg",
     "tags": [],
-    "synonyms": [],
+    "synonyms": ["paris", "france"],
     "description": "Eiffel Tower icon"
   },
   {
@@ -6521,8 +6543,8 @@ export const generatedIcons = [
     "displayName": "Home",
     "slug": "home",
     "format": "svg",
-    "category": "Buildings & Places",
-    "categoryId": "buildings-places",
+    "category": "User Interface",
+    "categoryId": USER_INTERFACE,
     "filePath": "/icons/line/Home.svg",
     "tags": [],
     "synonyms": [],
@@ -12723,8 +12745,8 @@ export const generatedIcons = [
     "displayName": "Settings",
     "slug": "settings",
     "format": "svg",
-    "category": "Profile",
-    "categoryId": "profile",
+    "category": "User Interface",
+    "categoryId": USER_INTERFACE,
     "filePath": "/icons/line/Settings.svg",
     "tags": [],
     "synonyms": [],
@@ -12737,8 +12759,8 @@ export const generatedIcons = [
     "displayName": "Settings 2",
     "slug": "settings-2",
     "format": "svg",
-    "category": "Profile",
-    "categoryId": "profile",
+    "category": "User Interface",
+    "categoryId": USER_INTERFACE,
     "filePath": "/icons/line/Settings-2.svg",
     "tags": [],
     "synonyms": [],
