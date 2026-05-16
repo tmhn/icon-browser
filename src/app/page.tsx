@@ -151,7 +151,7 @@ export default function Home() {
       {/* ── Main ───────────────────────────────────── */}
       <main className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
-        {/* Search + style toggle */}
+        {/* Search + style toggle — always on the same row */}
         <div className="flex items-center gap-3 mb-5">
           <div className="flex-1">
             <SearchBar
@@ -162,33 +162,8 @@ export default function Home() {
             />
           </div>
 
-          {/* Style toggle — desktop */}
           <div
-            className="hidden sm:flex items-center rounded-xl p-1 flex-shrink-0"
-            style={{ background: "var(--bg3)" }}
-          >
-            {(["line", "solid"] as const).map((style) => (
-              <button
-                key={style}
-                onClick={() => setIconStyle(style)}
-                className="px-4 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all duration-150"
-                style={
-                  iconStyle === style
-                    ? { background: "var(--bg2)", color: "var(--text)", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }
-                    : { color: "var(--text-dim)" }
-                }
-              >
-                {style}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Category pills + mobile style toggle */}
-        <div className="flex items-center gap-3 mb-6">
-          {/* Mobile style toggle */}
-          <div
-            className="sm:hidden flex items-center rounded-xl p-1 flex-shrink-0"
+            className="flex items-center rounded-xl p-1 flex-shrink-0"
             style={{ background: "var(--bg3)" }}
           >
             {(["line", "solid"] as const).map((style) => (
@@ -206,9 +181,11 @@ export default function Home() {
               </button>
             ))}
           </div>
+        </div>
 
-          {/* Scrollable category pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pills-scroll flex-1 min-w-0 pb-0.5">
+        {/* Category pills — own full-width row, left-aligned with everything else */}
+        <div className="mb-6">
+          <div className="flex items-center gap-1.5 overflow-x-auto pills-scroll pb-0.5">
             <button
               onClick={() => setFilters({})}
               className="px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap flex-shrink-0 transition-all duration-150"

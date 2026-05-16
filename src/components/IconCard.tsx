@@ -23,6 +23,7 @@ export const IconCard = memo(function IconCard({
 }: IconCardProps) {
   const { icon } = result;
   const [copied, setCopied] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   const getIconPath = (icon: Icon) =>
     icon.filePath.replace("/line/", `/${iconStyle}/`);
@@ -39,8 +40,18 @@ export const IconCard = memo(function IconCard({
   return (
     <div className="flex flex-col items-center">
       <div
-        className="group relative bg-white rounded-2xl cursor-pointer w-full aspect-square flex items-center justify-center transition-all duration-200 hover:scale-[1.05] hover:shadow-xl"
-        style={{ border: "1px solid var(--border-md)" }}
+        className="relative bg-white rounded-2xl w-full aspect-square flex items-center justify-center overflow-hidden"
+        style={{
+          border: "1px solid rgba(0,0,0,0.09)",
+          boxShadow: hovered
+            ? "0 8px 24px rgba(0,0,0,0.12)"
+            : "0 1px 4px rgba(0,0,0,0.07)",
+          transform: hovered ? "scale(1.05)" : "scale(1)",
+          transition: "transform 0.15s ease, box-shadow 0.15s ease",
+          cursor: "pointer",
+        }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         onClick={() => onIconClick(icon)}
       >
         <img
@@ -54,18 +65,21 @@ export const IconCard = memo(function IconCard({
 
         {/* Hover overlay */}
         <div
-          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex flex-col items-center justify-center gap-2"
-          style={{ background: "rgba(255,255,255,0.97)" }}
+          className="absolute inset-0 flex flex-col items-center justify-center gap-2"
+          style={{
+            background: "rgba(255,255,255,0.96)",
+            opacity: hovered ? 1 : 0,
+            transition: "opacity 0.15s ease",
+          }}
         >
           <button
             onClick={copyToClipboard}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-100"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
             style={
               copied
                 ? { background: "#e8f5e9", color: "#2e7d32" }
-                : { background: "var(--accent)", color: "#ffffff" }
+                : { background: "#18171f", color: "#ffffff" }
             }
-            title="Copy name"
           >
             {copied ? (
               <>
@@ -87,7 +101,9 @@ export const IconCard = memo(function IconCard({
             className="p-1.5 rounded-lg transition-colors"
             style={{ color: "var(--text-dim)" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-dim)")}
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "var(--text-dim)")
+            }
             title="Preview"
           >
             <EyeIcon className="h-3.5 w-3.5" />
