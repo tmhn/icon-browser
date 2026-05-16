@@ -5,7 +5,6 @@ import { SearchBar } from "@/components/SearchBar";
 import Image from "next/image";
 import { IconGridClient } from "@/components/IconGridClient";
 import { IconPreviewModal } from "@/components/IconPreviewModal";
-import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { IconSearch } from "@/lib/search";
 import { generatedIcons, categories } from "@/data/generated-icons";
 import { Icon, SearchFilters } from "@/types/icon";
@@ -17,26 +16,25 @@ export default function Home() {
   const [selectedIcon, setSelectedIcon] = useState<Icon | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [iconStyle, setIconStyle] = useState<"line" | "solid">("line");
-  const [visibleCount, setVisibleCount] = useState(120); // Start with 120 icons
+  const [visibleCount, setVisibleCount] = useState(120);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Initialize search engine with generated icons
   const searchEngine = useMemo(() => new IconSearch(generatedIcons), []);
 
-  // Get search results
-  const allSearchResults = useMemo(() => {
-    return searchEngine.search(searchQuery, filters);
-  }, [searchEngine, searchQuery, filters]);
+  const allSearchResults = useMemo(
+    () => searchEngine.search(searchQuery, filters),
+    [searchEngine, searchQuery, filters]
+  );
 
-  // Get paginated results
-  const searchResults = useMemo(() => {
-    return allSearchResults.slice(0, visibleCount);
-  }, [allSearchResults, visibleCount]);
+  const searchResults = useMemo(
+    () => allSearchResults.slice(0, visibleCount),
+    [allSearchResults, visibleCount]
+  );
 
-  // Get suggestions for search bar
-  const suggestions = useMemo(() => {
-    return searchEngine.getSuggestions(searchQuery);
-  }, [searchEngine, searchQuery]);
+  const suggestions = useMemo(
+    () => searchEngine.getSuggestions(searchQuery),
+    [searchEngine, searchQuery]
+  );
 
   const handleIconClick = useCallback((icon: Icon) => {
     setSelectedIcon(icon);
@@ -50,14 +48,12 @@ export default function Home() {
 
   const handleSuggestionClick = useCallback((suggestion: string) => {
     setSearchQuery(suggestion);
-    setVisibleCount(120); // Reset visible count
+    setVisibleCount(120);
   }, []);
 
   const loadMoreIcons = useCallback(() => {
     if (isLoadingMore || visibleCount >= allSearchResults.length) return;
-
     setIsLoadingMore(true);
-    // Simulate a small delay for better UX
     setTimeout(() => {
       setVisibleCount((prev) => Math.min(prev + 120, allSearchResults.length));
       setIsLoadingMore(false);
@@ -68,18 +64,15 @@ export default function Home() {
     setIconStyle(style);
   }, []);
 
-  // Reset visible count when search or filters change
   useEffect(() => {
     setVisibleCount(120);
   }, [searchQuery, filters]);
 
-  // Intersection observer for automatic loading
   const [loadMoreRef, loadMoreEntry] = useIntersectionObserver({
     threshold: 0.1,
     rootMargin: "100px",
   });
 
-  // Auto-load more when intersection observer triggers
   useEffect(() => {
     if (
       loadMoreEntry?.isIntersecting &&
@@ -88,206 +81,236 @@ export default function Home() {
     ) {
       loadMoreIcons();
     }
-  }, [
-    loadMoreEntry?.isIntersecting,
-    isLoadingMore,
-    visibleCount,
-    allSearchResults.length,
-  ]);
+  }, [loadMoreEntry?.isIntersecting, isLoadingMore, visibleCount, allSearchResults.length]);
+
+  const activeCategory = filters.category ?? null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between sm:h-16">
-            <div className="flex items-center flex-col sm:flex-row py-4 sm:py-0">
-              <div className="flex-shrink-0 flex flex-row items-center">
-                <Image
-                  src="/logo.png"
-                  alt="Icon Browser"
-                  width={28}
-                  height={28}
-                />
-                <h1 className="ml-4 text-lg sm:text-2xl font-bold text-gray-900">
-                  Icon Browser
-                </h1>
-              </div>
-              <div className="ml-6">
-                <p className="text-sm text-gray-500">
-                  {searchResults.length} icon
-                  {searchResults.length !== 1 ? "s" : ""} found
-                </p>
-              </div>
+    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+      {/* ── Header ─────────────────────────────────── */}
+      <header
+        className="sticky top-0 z-40"
+        style={{
+          background: "rgba(244,243,239,0.88)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderBottom: "1px solid var(--border-md)",
+        }}
+      >
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14">
+            {/* Logo + wordmark */}
+            <div className="flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="Icon Browser"
+                width={22}
+                height={22}
+              />
+              <h1 className="text-base font-bold tracking-tight" style={{ color: "var(--text)" }}>
+                Icon Browser
+              </h1>
             </div>
-            <div className="flex flex-col sm:flex-row gap-1 sm:gap-2">
-              <p className="text-sm text-gray-500">
+
+            {/* Credits */}
+            <div className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-dim)" }}>
+              <span>
                 Icons by{" "}
                 <a
                   href="https://www.zachroszczewski.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-500 hover:text-gray-900"
+                  className="underline underline-offset-2 transition-colors"
+                  style={{ color: "var(--text-mid)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-mid)")}
                 >
-                  Zach.
+                  Zach
                 </a>
-              </p>
-              <p className="text-sm text-gray-500">
+              </span>
+              <span>·</span>
+              <span className="hidden sm:inline">
                 App by{" "}
                 <a
                   href="https://tmhn.io"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-500 hover:text-gray-900"
+                  className="underline underline-offset-2 transition-colors"
+                  style={{ color: "var(--text-mid)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-mid)")}
                 >
-                  Tom.
+                  Tom
                 </a>
-              </p>
+              </span>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-8">
-        {/* Top Bar with Search and Filters */}
-        <div className="space-y-4 mb-8">
-          {/* Mobile: Stack vertically, Desktop: Horizontal */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            {/* Filters Row */}
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Category Filter Dropdown */}
-              <div className="relative flex-shrink-0">
-                <select
-                  value={filters.category || ""}
-                  onChange={(e) => {
-                    const category = e.target.value;
-                    setFilters(category ? { category } : {});
-                  }}
-                  className="appearance-none bg-white border border-gray-200 rounded-2xl px-3 py-2 pr-8 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent w-full min-w-[140px] max-w-[200px] shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <option value="">All Categories</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.name}>
-                      {category.name} ({category.count})
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                  <ChevronDownIcon className="h-4 w-4 text-gray-500" />
-                </div>
-              </div>
+      {/* ── Main ───────────────────────────────────── */}
+      <main className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
-              {/* Format Filter */}
-              {/* <div className="relative">
-              <select
-                value={filters.format || ""}
-                onChange={(e) => {
-                  const format = e.target.value;
-                  setFilters(
-                    format
-                      ? { ...filters, format }
-                      : { ...filters, format: undefined }
-                  );
-                }}
-                className="appearance-none bg-white border border-gray-200 rounded-2xl px-4 py-3 pr-10 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent min-w-[120px] shadow-sm hover:shadow-md transition-shadow"
+        {/* Search + style toggle */}
+        <div className="flex items-center gap-3 mb-5">
+          <div className="flex-1">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              suggestions={suggestions}
+              onSuggestionClick={handleSuggestionClick}
+            />
+          </div>
+
+          {/* Style toggle — desktop */}
+          <div
+            className="hidden sm:flex items-center rounded-xl p-1 flex-shrink-0"
+            style={{ background: "var(--bg3)" }}
+          >
+            {(["line", "solid"] as const).map((style) => (
+              <button
+                key={style}
+                onClick={() => setIconStyle(style)}
+                className="px-4 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all duration-150"
+                style={
+                  iconStyle === style
+                    ? { background: "var(--bg2)", color: "var(--text)", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }
+                    : { color: "var(--text-dim)" }
+                }
               >
-                <option value="">All Formats</option>
-                {formats.map((format) => (
-                  <option key={format} value={format}>
-                    {format.toUpperCase()}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <ChevronDownIcon className="h-4 w-4 text-gray-500" />
-              </div>
-            </div> */}
-
-              {/* Icon Style Toggle */}
-              <div className="flex items-center bg-gray-100 rounded-2xl p-1 flex-shrink-0">
-                <button
-                  onClick={() => setIconStyle("line")}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
-                    iconStyle === "line"
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  Line
-                </button>
-                <button
-                  onClick={() => setIconStyle("solid")}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
-                    iconStyle === "solid"
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  Solid
-                </button>
-              </div>
-
-              {/* Clear Filters Button */}
-              {Object.keys(filters).length > 0 && (
-                <button
-                  onClick={() => setFilters({})}
-                  className="text-xs text-gray-600 hover:text-gray-900 flex items-center gap-1 px-2 py-1.5 rounded-xl hover:bg-gray-50 transition-colors font-medium flex-shrink-0"
-                >
-                  <XMarkIcon className="h-3 w-3" />
-                  Clear
-                </button>
-              )}
-            </div>
-
-            {/* Search Bar */}
-            <div className="w-full lg:w-96 flex-shrink-0">
-              <SearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                suggestions={suggestions}
-                onSuggestionClick={handleSuggestionClick}
-              />
-            </div>
+                {style}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Results Info */}
-        <div className="mb-6">
-          {/* <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-            {searchQuery ? `Search results for "${searchQuery}"` : "Discover"}
-          </h2> */}
-          <p className="text-gray-600 font-medium">
-            Showing {searchResults.length} of {allSearchResults.length} icons
-            {Object.keys(filters).length > 0 && " found"}
-          </p>
-        </div>
+        {/* Category pills + mobile style toggle */}
+        <div className="flex items-center gap-3 mb-6">
+          {/* Mobile style toggle */}
+          <div
+            className="sm:hidden flex items-center rounded-xl p-1 flex-shrink-0"
+            style={{ background: "var(--bg3)" }}
+          >
+            {(["line", "solid"] as const).map((style) => (
+              <button
+                key={style}
+                onClick={() => setIconStyle(style)}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all duration-150"
+                style={
+                  iconStyle === style
+                    ? { background: "var(--bg2)", color: "var(--text)", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }
+                    : { color: "var(--text-dim)" }
+                }
+              >
+                {style}
+              </button>
+            ))}
+          </div>
 
-        {/* Category Overview - Only show when no search/filters */}
-        {/* {!searchQuery && Object.keys(filters).length === 0 && (
-          <div className="mb-10">
-            <h3 className="text-xl font-semibold text-gray-900 mb-6">
-              Browse by Category
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-3">
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setFilters({ category: category.name })}
-                  className="p-4 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 text-left shadow-sm hover:shadow-md group"
-                >
-                  <div className="text-sm font-semibold text-gray-900 mb-1 group-hover:text-gray-700 transition-colors">
+          {/* Scrollable category pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pills-scroll flex-1 min-w-0 pb-0.5">
+            <button
+              onClick={() => setFilters({})}
+              className="px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap flex-shrink-0 transition-all duration-150"
+              style={
+                !activeCategory
+                  ? { background: "var(--accent)", color: "#ffffff" }
+                  : { background: "var(--bg3)", color: "var(--text-dim)" }
+              }
+              onMouseEnter={(e) => {
+                if (activeCategory) e.currentTarget.style.background = "#e2e1dd";
+              }}
+              onMouseLeave={(e) => {
+                if (activeCategory) e.currentTarget.style.background = "var(--bg3)";
+              }}
+            >
+              All
+            </button>
+
+            {categories.map(
+              (category: { id: string; name: string; count: number }) => {
+                const isActive = activeCategory === category.name;
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => setFilters(isActive ? {} : { category: category.name })}
+                    className="px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap flex-shrink-0 transition-all duration-150"
+                    style={
+                      isActive
+                        ? { background: "var(--accent)", color: "#ffffff" }
+                        : { background: "var(--bg3)", color: "var(--text-dim)" }
+                    }
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.background = "#e2e1dd";
+                        e.currentTarget.style.color = "var(--text)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.background = "var(--bg3)";
+                        e.currentTarget.style.color = "var(--text-dim)";
+                      }
+                    }}
+                  >
                     {category.name}
-                  </div>
-                  <div className="text-xs text-gray-500 font-medium">
-                    {category.count} icons
-                  </div>
-                </button>
-              ))}
-            </div>
+                    <span className="ml-1.5 opacity-40 font-normal">{category.count}</span>
+                  </button>
+                );
+              }
+            )}
           </div>
-        )} */}
+        </div>
 
-        {/* Icons Grid */}
+        {/* Result count */}
+        <p className="text-xs mb-5 font-medium" style={{ color: "var(--text-dim)" }}>
+          {allSearchResults.length === searchResults.length
+            ? `${allSearchResults.length.toLocaleString()} icons`
+            : `Showing ${searchResults.length.toLocaleString()} of ${allSearchResults.length.toLocaleString()} icons`}
+          {activeCategory && (
+            <span style={{ color: "var(--text-mid)" }}>
+              {" "}in <span style={{ color: "var(--text)" }}>{activeCategory}</span>
+            </span>
+          )}
+          {searchQuery && (
+            <span style={{ color: "var(--text-mid)" }}>
+              {" "}for &ldquo;<span style={{ color: "var(--text)" }}>{searchQuery}</span>&rdquo;
+            </span>
+          )}
+        </p>
+
+        {/* Empty state */}
+        {allSearchResults.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div
+              className="w-16 h-16 rounded-2xl mb-4 flex items-center justify-center"
+              style={{ background: "var(--bg3)" }}
+            >
+              <svg
+                className="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                viewBox="0 0 24 24"
+                style={{ color: "var(--text-dim)" }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                />
+              </svg>
+            </div>
+            <p className="text-sm font-semibold" style={{ color: "var(--text)" }}>
+              No icons found
+            </p>
+            <p className="text-xs mt-1" style={{ color: "var(--text-dim)" }}>
+              Try a different search or category
+            </p>
+          </div>
+        )}
+
+        {/* Icon grid */}
         <IconGridClient
           results={searchResults}
           onIconClick={handleIconClick}
@@ -296,41 +319,38 @@ export default function Home() {
           hasSearchQuery={!!searchQuery.trim()}
         />
 
-        {/* Load More Button */}
+        {/* Load more */}
         {visibleCount < allSearchResults.length && (
-          <div className="mt-8 flex justify-center">
+          <div className="mt-10 flex justify-center">
             <button
               ref={loadMoreRef}
               onClick={loadMoreIcons}
               disabled={isLoadingMore}
-              className="px-8 py-3 bg-white border border-gray-200 rounded-2xl text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-8 py-2.5 rounded-2xl text-sm font-semibold transition-all disabled:opacity-50"
+              style={{
+                background: "var(--bg2)",
+                color: "var(--text)",
+                border: "1px solid var(--border-md)",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--bg3)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "var(--bg2)")}
             >
               {isLoadingMore ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                <>
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
                   Loading...
-                </div>
+                </>
               ) : (
-                `Load More (${
-                  allSearchResults.length - visibleCount
-                } remaining)`
+                `Load ${Math.min(120, allSearchResults.length - visibleCount)} more`
               )}
             </button>
           </div>
         )}
+      </main>
 
-        {/* Auto-loading indicator */}
-        {isLoadingMore && visibleCount < allSearchResults.length && (
-          <div className="mt-4 flex justify-center">
-            <div className="flex items-center gap-2 text-gray-500 text-sm">
-              <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
-              Loading more icons...
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Icon Preview Modal */}
       <IconPreviewModal
         icon={selectedIcon}
         isOpen={isModalOpen}

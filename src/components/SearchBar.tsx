@@ -18,10 +18,9 @@ export function SearchBar({
   onChange,
   suggestions,
   onSuggestionClick,
-  placeholder = "Search icons by name or category",
+  placeholder = "Search icons by name or keyword...",
   className,
 }: SearchBarProps) {
-  const [isFocused, setIsFocused] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
@@ -37,7 +36,6 @@ export function SearchBar({
         setShowSuggestions(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -64,56 +62,54 @@ export function SearchBar({
   return (
     <div className={cn("relative w-full", className)}>
       <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-          <MagnifyingGlassIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <MagnifyingGlassIcon className="h-4 w-4" style={{ color: "var(--text-dim)" }} />
         </div>
         <input
           ref={inputRef}
           type="text"
           value={value}
           onChange={handleInputChange}
-          onFocus={() => {
-            setIsFocused(true);
-            setShowSuggestions(value.length > 0 && suggestions.length > 0);
-          }}
-          onBlur={() => setIsFocused(false)}
+          onFocus={() =>
+            setShowSuggestions(value.length > 0 && suggestions.length > 0)
+          }
           placeholder={placeholder}
-          className={cn(
-            "block w-full pl-10 pr-10 py-3 sm:py-4 border border-gray-200 rounded-2xl",
-            "bg-white text-gray-900 placeholder-gray-500 text-sm sm:text-base font-medium",
-            "focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent",
-            "transition-all duration-200 ease-in-out",
-            "shadow-sm hover:shadow-md focus:shadow-lg",
-            isFocused && "ring-2 ring-gray-400 border-transparent"
-          )}
+          className="search-input block w-full pl-11 pr-10 py-3 rounded-2xl text-sm font-medium"
         />
         {value && (
           <button
             onClick={clearSearch}
-            className="absolute inset-y-0 right-0 pr-2 sm:pr-3 flex items-center"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center transition-colors"
+            style={{ color: "var(--text-dim)" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-dim)")}
           >
-            <XMarkIcon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500 hover:text-gray-700 transition-colors" />
+            <XMarkIcon className="h-4 w-4" />
           </button>
         )}
       </div>
 
-      {/* Suggestions Dropdown */}
       {showSuggestions && suggestions.length > 0 && (
         <div
           ref={suggestionsRef}
-          className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded-2xl shadow-xl max-h-60 overflow-y-auto"
+          className="suggestions-list absolute z-50 mt-2 w-full rounded-2xl shadow-xl max-h-56 overflow-y-auto"
         >
           <div className="py-1">
             {suggestions.map((suggestion, index) => (
               <button
                 key={index}
                 onClick={() => handleSuggestionClick(suggestion)}
-                className="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors"
+                className="w-full px-4 py-2.5 text-left text-sm font-medium flex items-center gap-2.5 transition-colors"
+                style={{ color: "var(--text-mid)" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = "var(--bg)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = "transparent")
+                }
               >
-                <div className="flex items-center">
-                  <MagnifyingGlassIcon className="h-4 w-4 text-gray-400 mr-2" />
-                  {suggestion}
-                </div>
+                <MagnifyingGlassIcon className="h-3 w-3 flex-shrink-0" style={{ color: "var(--text-dim)" }} />
+                <span style={{ color: "var(--text)" }}>{suggestion}</span>
               </button>
             ))}
           </div>

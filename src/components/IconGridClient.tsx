@@ -28,83 +28,40 @@ export const IconGridClient = memo(function IconGridClient({
     setIsClient(true);
   }, []);
 
+  const gridClass = cn(
+    "grid grid-cols-4 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-10 gap-3 sm:gap-4",
+    className
+  );
+
   if (!isClient) {
-    // Return SSR version during initial render
     return (
-      <div
-        className={cn(
-          "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6",
-          className
-        )}
-      >
+      <div className={gridClass}>
         {results.map((result) => (
-          <div key={result.icon.id} className="flex flex-col text-center">
-            <div className="group relative bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-xl hover:border-gray-300 transition-all duration-300 cursor-pointer">
-              {/* Icon Preview */}
-              <div className="aspect-square flex items-center justify-center mb-4 rounded-2xl group-hover:bg-gray-50 transition-colors">
-                <div className="w-12 h-12 flex items-center justify-center">
-                  <img
-                    src={result.icon.filePath.replace(
-                      "/line/",
-                      `/${iconStyle}/`
-                    )}
-                    alt={result.icon.name}
-                    className="w-8 h-8 object-contain"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = "none";
-                      const fallback = target.nextElementSibling as HTMLElement;
-                      if (fallback) fallback.style.display = "flex";
-                    }}
-                  />
-                  <div
-                    className="w-8 h-8 bg-gray-200 rounded-xl flex items-center justify-center"
-                    style={{ display: "none" }}
-                  ></div>
-                </div>
-              </div>
-
-              {/* Icon Info */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  {hasSearchQuery && result.score !== undefined && (
-                    <span className="text-xs text-blue-600 font-medium">
-                      {Math.round((1 - result.score) * 100)}% match
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Match Indicators */}
-              {result.matchedFields.length > 0 && (
-                <div className="absolute top-2 right-2">
-                  <div
-                    className="w-2 h-2 bg-blue-500 rounded-full"
-                    title={`Matched: ${result.matchedFields.join(", ")}`}
-                  />
-                </div>
-              )}
+          <div key={result.icon.id} className="flex flex-col items-center">
+            <div
+              className="bg-white rounded-2xl w-full aspect-square flex items-center justify-center"
+              style={{ border: "1px solid var(--border-md)" }}
+            >
+              <img
+                src={result.icon.filePath.replace("/line/", `/${iconStyle}/`)}
+                alt={result.icon.name}
+                className="w-8 h-8 object-contain"
+              />
             </div>
-            <h3
-              className="text-sm font-semibold text-gray-900 truncate mt-2"
-              title={result.icon.name}
+            <p
+              className="mt-1.5 text-[11px] truncate w-full text-center px-1"
+              style={{ color: "var(--text-dim)", fontWeight: 500 }}
             >
               {result.icon.name}
-            </h3>
+            </p>
           </div>
         ))}
       </div>
     );
   }
 
-  // Return interactive version after hydration
   return (
-    <div
-      className={cn(
-        "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4 lg:gap-6",
-        className
-      )}
-    >
+    <div className={gridClass}>
       {results.map((result) => (
         <IconCard
           key={result.icon.id}
